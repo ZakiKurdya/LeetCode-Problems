@@ -16,6 +16,7 @@ class Solution {
     }
 
     public class ExpressionTree {
+    /** Binary Tree Node */
      public static class Node {
         String value;
         Node left, right;
@@ -32,8 +33,9 @@ class Solution {
         operands.push(root);
     }
 
+    /** Enter the Arithmetic Expression to be evaluated */
     public Node buildETWithInfix(String expression) {
-        Map<Character, Integer> priority = Map.of('(', 1, '+', 2, '-', 2);
+        Map<Character, Integer> priority = Map.of('(', 1, '+', 2, '-', 2, '*', 3, '/', 3);
         Stack<Node> operands = new Stack<>();
         Stack<String> operators = new Stack<>();
         StringBuilder wholeNumber = new StringBuilder();
@@ -83,6 +85,12 @@ class Solution {
                 double y = Double.parseDouble(String.valueOf(evaluateExpressions(root.right)));
                 String operator = root.value;
                 switch (operator){
+                    case "*" -> {
+                        return x*y;
+                    }
+                    case "/" -> {
+                        return x/y;
+                    }
                     case "+" -> {
                         return x+y;
                     }
