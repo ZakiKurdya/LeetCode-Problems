@@ -1,8 +1,9 @@
 class Solution {
     public boolean detectCapitalUse(String word) {
+        String temp = word.substring(1);
         return word.toLowerCase().equals(word) ||
                word.toUpperCase().equals(word) ||
                (Character.isUpperCase(word.charAt(0)) &&
-                word.substring(1).toLowerCase().equals(word.substring(1)));
+                temp.toLowerCase().equals(temp));
     }
 }
