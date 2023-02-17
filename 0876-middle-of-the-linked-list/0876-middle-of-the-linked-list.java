@@ -10,8 +10,7 @@
  */
 class Solution {
     public ListNode middleNode(ListNode head) {
-        int middle = listLength(head) / 2;
-        byte counter = 0;
+        int middle = listLength(head) / 2, counter = 0;
         while (counter != middle) {
             head = head.next;
             counter++;
