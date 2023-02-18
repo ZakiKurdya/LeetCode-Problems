@@ -25,7 +25,7 @@ class Solution {
         TreeNode right = node.right;
         node.right = node.left;
         node.left = right;
+        helper(node.left);
         helper(node.right);
-        helper(node.left);    
     }
 }
