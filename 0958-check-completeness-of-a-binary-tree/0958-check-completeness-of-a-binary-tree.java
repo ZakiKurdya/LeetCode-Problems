@@ -15,55 +15,24 @@
  */
 class Solution {    
     public boolean isCompleteTree(TreeNode root) {
-        Queue<TreeNode> levels = new LinkedList<>();
-        List<Boolean> isNull = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
         
-        levels.add(root);
-        isNull.add(false);
-        isNull.add(null);
-        
-        int level = 2, sum = 0;
-        boolean isLevelNull = false;
-        
-        while (!levels.isEmpty()) {
-            TreeNode temp = levels.remove();
+        boolean isNull = false;
+        while (queue.size() != 0) {
+            TreeNode node = queue.remove();
             
-            sum +=2;
+            if (node == null)
+                isNull = true;
+            else {
+                if (isNull)
+                    return false;
             
-            if (temp == null) {
-                isLevelNull = true;
-                
-                isNull.add(true);
-                isNull.add(true);
-            } else {
-                isLevelNull = false;
-                
-                isNull.add(temp.left == null ? true : false);
-                levels.add(temp.left);
-                
-                isNull.add(temp.right == null ? true : false);
-                levels.add(temp.right);
-            }
-            
-            if (level == sum) {
-                isNull.add(null);
-                sum = 0;
-                level *= 2;
-                
-                if (isLevelNull)
-                    break;
+                queue.add(node.left);
+                queue.add(node.right);
             }
         }
-                
-        boolean isNullOccur = false;        
-        for (int i = 1; i < isNull.size(); i++) {
-            if (isNull.get(i) != null && !isNull.get(i) && isNullOccur)
-                return false;
-            
-            if (isNull.get(i) != null && isNull.get(i))
-                isNullOccur = true;
-        }
-        
+    
         return true;
     }
 }
