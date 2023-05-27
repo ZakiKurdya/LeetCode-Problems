@@ -29,16 +29,14 @@ class Trie {
             if (cur.children.containsKey(c))
                 cur = cur.children.get(c);
             else {
-                
                 TrieNode temp = new TrieNode(c);
                 cur.children.put(c, temp);
                 
                 cur = temp;
             }
-            
-            if (i == word.length() - 1)
-                cur.isCompleteWord = true;
         }
+        
+        cur.isCompleteWord = true;        
     }
     
     public boolean search(String word) {
@@ -51,12 +49,9 @@ class Trie {
                 cur = cur.children.get(c);
             else
                 return false;
-            
-            if (i == word.length() - 1)
-                return cur.isCompleteWord;
         }
         
-        return false;
+        return cur.isCompleteWord;
     }
     
     public boolean startsWith(String prefix) {
