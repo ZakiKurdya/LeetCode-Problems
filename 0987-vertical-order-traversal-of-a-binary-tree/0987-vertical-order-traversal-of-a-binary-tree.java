@@ -13,74 +13,44 @@
  *     }
  * }
  */
-
 class Solution {
-    private final Map<Integer, List<Integer>> columns = new HashMap<>();
+    // {col : {row : [nodes]}}
+    private TreeMap<Integer, TreeMap<Integer, List<Integer>>> map;
     
     public List<List<Integer>> verticalTraversal(TreeNode root) {
-        dfs(root, 0, 0);
-        int firstCol = Integer.MAX_VALUE;
-        for (int i : columns.keySet())
-            firstCol = Math.min(firstCol, i);
-        
         List<List<Integer>> result = new ArrayList<>();
-    
-        while (columns.containsKey(firstCol)) {
-            List<Integer> temp = columns.get(firstCol);
-            Map<Integer, List<Integer>> rows = new HashMap<>();
+        map = new TreeMap<>();
+        
+        dfs(root, 0, 0);
+        
+        for (TreeMap<Integer, List<Integer>> item : map.values()) {
+            List<Integer> colNodes = new ArrayList<>();
             
-            for (int i = 0; i < temp.size(); i += 2) {
-                List<Integer> rowList;
-                if (rows.containsKey(temp.get(i))) {
-                    rowList = rows.get(temp.get(i));
-                    rowList.add(temp.get(i + 1));
-                } else {
-                    rowList = new ArrayList<>();
-                    rowList.add(temp.get(i + 1));
-                }
-                rows.put(temp.get(i), rowList);           
+            for (List<Integer> list : item.values()) {
+                Collections.sort(list);
+                colNodes.addAll(list);
             }
             
-            PriorityQueue<Integer> rowOrder = new PriorityQueue<>();
-            for (int i : rows.keySet())
-                rowOrder.add(i);
-            
-            List<Integer> list = new ArrayList<>();
-            int rowNum = rowOrder.poll();
-            while (rows.containsKey(rowNum)) {
-                List<Integer> row = rows.get(rowNum);
-                Collections.sort(row);
-                list.addAll(row);
-                if (!rowOrder.isEmpty())
-                    rowNum = rowOrder.poll();
-                else
-                    rowNum = Integer.MAX_VALUE;
-            }
-            
-            result.add(list);
-            firstCol ++;
+            result.add(colNodes);
         }
         
         return result;
     }
     
-    private void dfs(TreeNode node, int r, int c) {
-        if (node == null) // base case
+    private void dfs(TreeNode node, int col, int row) {
+        if (node == null)
             return;
         
-        List<Integer> temp;
-        if (columns.containsKey(c)) {
-            temp = columns.get(c);
-            temp.add(r);
-            temp.add(node.val);
-        } else {
-            temp = new ArrayList<>();
-            temp.add(r);
-            temp.add(node.val);
-        }
-        columns.put(c, temp);
-
-        dfs(node.left, r + 1, c - 1); // left
-        dfs(node.right, r + 1, c + 1); // right
+        dfs(node.left, col - 1, row + 1);
+        
+        TreeMap<Integer, List<Integer>> tempMap = map.getOrDefault(col, new TreeMap<>());
+        List<Integer> tempList = tempMap.getOrDefault(row, new ArrayList<>());
+        
+        tempList.add(node.val);
+        tempMap.put(row, tempList);
+        
+        map.put(col, tempMap);
+        
+        dfs(node.right, col + 1, row + 1);
     }
 }
