@@ -2,15 +2,15 @@ class Trie {
     static class TrieNode {
         char value;
         boolean isCompleteWord;
-        Map<Character, TrieNode> children;
+        TrieNode[] children;
         
         public TrieNode() {
-            this.children = new HashMap<>();
+            this.children = new TrieNode[26];
         }
         
         public TrieNode(char value) {
             this.value = value;
-            this.children = new HashMap<>();
+            this.children = new TrieNode[26];
         }
     }
     
@@ -26,11 +26,11 @@ class Trie {
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
             
-            if (cur.children.containsKey(c))
-                cur = cur.children.get(c);
+            if (cur.children[c - 'a'] != null)
+                cur = cur.children[c - 'a'];
             else {
                 TrieNode temp = new TrieNode(c);
-                cur.children.put(c, temp);
+                cur.children[c - 'a'] = temp;
                 
                 cur = temp;
             }
@@ -45,8 +45,8 @@ class Trie {
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
             
-            if (cur.children.containsKey(c))
-                cur = cur.children.get(c);
+            if (cur.children[c - 'a'] != null)
+                cur = cur.children[c - 'a'];
             else
                 return false;
         }
@@ -60,8 +60,8 @@ class Trie {
         for (int i = 0; i < prefix.length(); i++) {
             char c = prefix.charAt(i);
             
-            if (cur.children.containsKey(c))
-                cur = cur.children.get(c);
+            if (cur.children[c - 'a'] != null)
+                cur = cur.children[c - 'a'];
             else
                 return false;
         }
