@@ -1,58 +1,56 @@
 class TimeMap {
-    private Map<String, List<Entry>> timeMap;
+    private static class MapNode {
+        int timestamp;
+        String value;
+
+        public MapNode(int timestamp, String value) {
+            this.timestamp = timestamp;
+            this.value = value;
+        }
+    }
+    
+    private Map<String, List<MapNode>> timeMap;
 
     public TimeMap() {
         timeMap = new HashMap<>();
     }
 
     public void set(String key, String value, int timestamp) {
-        List<Entry> entryList = timeMap.getOrDefault(key, new ArrayList<>());
-        entryList.add(new Entry(timestamp, value));
-        timeMap.put(key, entryList);
+        List<MapNode> temp = timeMap.getOrDefault(key, new ArrayList<>());
+        temp.add(new MapNode(timestamp, value));
+        
+        timeMap.put(key, temp);
     }
 
     public String get(String key, int timestamp) {
         if (!timeMap.containsKey(key))
             return "";
 
-        List<Entry> entryList = timeMap.get(key);
-        int index = binarySearch(entryList, timestamp);
+        List<MapNode> temp = timeMap.get(key);
+        
+        int index = lowerBound(temp, timestamp);
 
         if (index == -1)
             return "";
 
-        return entryList.get(index).value;
+        return temp.get(index).value;
     }
 
-    // Binary search implementation to find the index of the greatest entry less than or equal to the given timestamp
-    private int binarySearch(List<Entry> entryList, int timestamp) {
-        int left = 0;
-        int right = entryList.size() - 1;
-        int result = -1;
+    // greatest timestamp less than or equal to the given timestamp
+    private int lowerBound(List<MapNode> list, int timestamp) {
+        int left = 0, right = list.size() - 1, result = -1;
 
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            Entry entry = entryList.get(mid);
+            MapNode item = list.get(mid);
 
-            if (entry.timestamp <= timestamp) {
+            if (item.timestamp <= timestamp) {
                 result = mid;
                 left = mid + 1;
-            } else {
+            } else
                 right = mid - 1;
-            }
         }
 
         return result;
-    }
-
-    // Helper class to represent an entry with a timestamp and value
-    private static class Entry {
-        int timestamp;
-        String value;
-
-        Entry(int timestamp, String value) {
-            this.timestamp = timestamp;
-            this.value = value;
-        }
     }
 }
