@@ -16,17 +16,17 @@ class Solution {
             q = temp;
         }
         
-        return findLCA(root, p, q);
+        return dfs(root, p, q);
     }
     
-    private TreeNode findLCA(TreeNode node, TreeNode p, TreeNode q) {
+    private TreeNode dfs(TreeNode node, TreeNode p, TreeNode q) {
         if (node == null)
             return null;
         
         if (node.val > q.val)
-            return findLCA(node.left, p, q);
+            return dfs(node.left, p, q);
         else if (node.val < p.val)
-            return findLCA(node.right, p, q);
+            return dfs(node.right, p, q);
         else
             return node;
     }
