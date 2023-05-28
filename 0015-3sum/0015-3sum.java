@@ -1,32 +1,36 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        
-        Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
         
-        for(int i=0;i<nums.length;i++){
-            int start = i+1;
-            int end = nums.length-1;
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
             
-            while(start<end){
-                int sum = nums[i]+nums[start]+nums[end];
+            int l = i + 1, r = nums.length - 1;
+            
+            while (l < r) {
+                int sum = nums[i] + nums[r] + nums[l];
                 
-                if(sum==0){
-                    result.add(Arrays.asList(nums[i],nums[start],nums[end]));
-                    int first = nums[start];
-                    int last = nums[end];
-                    while(start<end && nums[start]==first) start++;
-                    while(start<end && nums[end]==last) end--;
-                }
-                else if(sum<0){
-                    start++;
-                }
-                else{
-                    end--;
-                }
+                if (sum == 0) {
+                    List<Integer> temp = new ArrayList<>();
+                    temp.add(nums[i]);
+                    temp.add(nums[l]);
+                    temp.add(nums[r]);
+                    
+                    result.add(temp);
+                    l++; r--;
+                    
+                    while(l < r && nums[l] == nums[l - 1])
+                        l++;
+                    
+                    while(l < r && nums[r] == nums[r + 1])
+                        r--;
+                } else if (sum < 0)
+                    l++;
+                else
+                    r--;
             }
-            while(i+1<nums.length && nums[i]==nums[i+1]) i++;
-            
         }
         
         return result;
