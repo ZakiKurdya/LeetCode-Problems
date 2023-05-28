@@ -23,7 +23,7 @@ class Solution {
         boolean left = postOrder(node.left, p, q);
         boolean right = postOrder(node.right, p, q);
 
-        if (((left && right) || ((node.val == p || node.val == q) && right )
+        if (LCA == null && ((left && right) || ((node.val == p || node.val == q) && right )
            ||( (node.val == p || node.val == q) && left))) {
             LCA = node;
         }
