@@ -1,35 +1,35 @@
 class Solution {
+    private static class WordFrequency {
+        String word;
+        int frequency;
+        
+        WordFrequency(String word, int frequency) {
+            this.word = word;
+            this.frequency = frequency;
+        }
+    }
+    
     public List<String> topKFrequent(String[] words, int k) {
         Map<String, Integer> freq = new HashMap<>();
-        for (String s : words)
-            freq.put(s, freq.getOrDefault(s, 0) + 1);
+        for (String word : words)
+            freq.put(word, freq.getOrDefault(word, 0) + 1);
         
-        TreeMap<Integer, PriorityQueue<String>> freqRev = new TreeMap(Collections.reverseOrder());
-        for (Map.Entry<String, Integer> entry : freq.entrySet()) {
-            PriorityQueue<String> temp;
-            
-            if (!freqRev.containsKey(entry.getValue()))
-                temp = new PriorityQueue<>();
+        PriorityQueue<WordFrequency> pq = new PriorityQueue<>((a, b) -> {
+            if (a.frequency != b.frequency)
+                return a.frequency - b.frequency; // ascending order by frequency
             else
-                temp = freqRev.get(entry.getValue());
-            
-            temp.add(entry.getKey());
-            
-            freqRev.put(entry.getValue(), temp);
+                return b.word.compareTo(a.word); // descending order by word
+        });
+        
+        for (Map.Entry<String, Integer> entry : freq.entrySet()) {
+            pq.add(new WordFrequency(entry.getKey(), entry.getValue()));
+            if (pq.size() > k)
+                pq.poll();
         }
         
         List<String> result = new ArrayList<>();
-        int cnt = 0;
-        
-        outer:
-        for (PriorityQueue<String> pq : freqRev.values()) {
-            while (!pq.isEmpty()) {
-                if (cnt++ == k)
-                    break outer;
-                
-                result.add(pq.poll());
-            }
-        }
+        while (!pq.isEmpty())
+            result.add(0, pq.poll().word);
         
         return result;
     }
