@@ -14,22 +14,20 @@ class Solution {
         for (String word : words)
             freq.put(word, freq.getOrDefault(word, 0) + 1);
         
-        PriorityQueue<WordFrequency> pq = new PriorityQueue<>((a, b) -> {
+        List<WordFrequency> wordFreqList = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : freq.entrySet())
+            wordFreqList.add(new WordFrequency(entry.getKey(), entry.getValue()));
+        
+        wordFreqList.sort((a, b) -> {
             if (a.frequency != b.frequency)
-                return a.frequency - b.frequency; // ascending order by frequency
+                return b.frequency - a.frequency; // descending order by frequency
             else
-                return b.word.compareTo(a.word); // descending order by word
+                return a.word.compareTo(b.word); // ascending order by word (lexicographical)
         });
         
-        for (Map.Entry<String, Integer> entry : freq.entrySet()) {
-            pq.add(new WordFrequency(entry.getKey(), entry.getValue()));
-            if (pq.size() > k)
-                pq.poll();
-        }
-        
         List<String> result = new ArrayList<>();
-        while (!pq.isEmpty())
-            result.add(0, pq.poll().word);
+        for (int i = 0; i < k; i++)
+            result.add(wordFreqList.get(i).word);
         
         return result;
     }
