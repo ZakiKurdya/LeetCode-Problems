@@ -1,42 +1,50 @@
 class TimeMap {
-    private Map<String, TreeMap<Integer, String>> map;
+    private static class MapNode {
+        int timestamp;
+        String value;
+        
+        public MapNode(int timestamp, String value) {
+            this.timestamp = timestamp;
+            this.value = value;
+        }
+    }
+    
+    private Map<String, List<MapNode>> timeMap;
     
     public TimeMap() {
-        this.map = new HashMap<>();
+        timeMap = new HashMap();
     }
     
     public void set(String key, String value, int timestamp) {
-        TreeMap<Integer, String> temp;
+        if (!timeMap.containsKey(key))
+            timeMap.put(key, new ArrayList());
         
-        if (map.containsKey(key))
-            temp = map.get(key);
-        else
-            temp = new TreeMap<>();
-        
-        temp.put(timestamp, value);
-        
-        this.map.put(key, temp);
+        timeMap.get(key).add(new MapNode(timestamp, value));
     }
     
     public String get(String key, int timestamp) {
-        if (!map.containsKey(key))
+        if (!timeMap.containsKey(key))
             return "";
-        else {
-            TreeMap<Integer, String> temp = map.get(key);
+        
+        if (timestamp < timeMap.get(key).get(0).timestamp)
+            return "";
+    
+        // binary search
+        int left = 0, right = timeMap.get(key).size();
+        
+        while (left < right) {
+            int mid = (right - left) / 2 + left;
             
-            if (temp.containsKey(timestamp)) 
-                return temp.get(timestamp);
-            else if (timestamp < temp.firstKey())
-                return "";
+            if (timeMap.get(key).get(mid).timestamp <= timestamp)
+                left = mid + 1;
             else
-                return temp.get(temp.lowerKey(timestamp));
+                right = mid;
         }
+
+        // no time <= timestamp exists.
+        if (right == 0)
+            return "";
+                
+        return timeMap.get(key).get(right - 1).value;
     }
 }
-
-/**
- * Your TimeMap object will be instantiated and called as such:
- * TimeMap obj = new TimeMap();
- * obj.set(key,value,timestamp);
- * String param_2 = obj.get(key,timestamp);
- */
