@@ -4,12 +4,12 @@ class Solution {
         for (String s : words)
             freq.put(s, freq.getOrDefault(s, 0) + 1);
         
-        TreeMap<Integer, List<String>> freqRev = new TreeMap(Collections.reverseOrder());
+        TreeMap<Integer, PriorityQueue<String>> freqRev = new TreeMap(Collections.reverseOrder());
         for (Map.Entry<String, Integer> entry : freq.entrySet()) {
-            List<String> temp;
+            PriorityQueue<String> temp;
             
             if (!freqRev.containsKey(entry.getValue()))
-                temp = new ArrayList<>();
+                temp = new PriorityQueue<>();
             else
                 temp = freqRev.get(entry.getValue());
             
@@ -22,14 +22,12 @@ class Solution {
         int cnt = 0;
         
         outer:
-        for (List<String> list : freqRev.values()) {
-            Collections.sort(list);
-            
-            for (String s : list) {
+        for (PriorityQueue<String> pq : freqRev.values()) {
+            while (!pq.isEmpty()) {
                 if (cnt++ == k)
-                break outer;
+                    break outer;
                 
-                result.add(s);
+                result.add(pq.poll());
             }
         }
         
