@@ -8,31 +8,26 @@
  * }
  */
 
-class Solution {
-    private TreeNode lca;
-    
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        this.lca = root;
-        
-        dfs(root, p, q);
-        
-        return this.lca;
-    }
-    
-    private void dfs(TreeNode node, TreeNode p, TreeNode q) {
-        if (node == null)
-            return;
-        
-        if (node.val == p.val || node.val == q.val ||
-            (node.val > Math.min(p.val, q.val) && node.val < Math.max(p.val, q.val))) {
-            lca = node;
-            return;
+class Solution {    
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {        
+        if (p.val > q.val) {
+            TreeNode temp = p;
+            p = q;
+            q = temp;
         }
         
-        if (node.val > p.val && node.val > q.val)
-            dfs(node.left, p, q);
+        return findLCA(root, p, q);
+    }
+    
+    private TreeNode findLCA(TreeNode node, TreeNode p, TreeNode q) {
+        if (node == null)
+            return null;
         
-        if (node.val < p.val && node.val < q.val)
-            dfs(node.right, p, q);
+        if (node.val > q.val)
+            return findLCA(node.left, p, q);
+        else if (node.val < p.val)
+            return findLCA(node.right, p, q);
+        else
+            return node;
     }
 }
