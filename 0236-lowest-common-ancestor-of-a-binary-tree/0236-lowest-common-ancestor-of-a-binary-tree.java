@@ -21,18 +21,14 @@ class Solution {
             return false;
         
         boolean left = postOrder(node.left, p, q);
-                System.out.println("left " + node.val + " " + left);
         boolean right = postOrder(node.right, p, q);
-                System.out.println("right " + node.val +" "+right);
 
         
       
         
-                     System.out.println(node.val + " " + right + " " + left);
 
         if (LCA == null && ((left && right) || ((node.val == p || node.val == q) && right )
            ||( (node.val == p || node.val == q) && left))) {
-             System.out.println(node.val + " " + right + " " + left);
             LCA = node;
         }
         
