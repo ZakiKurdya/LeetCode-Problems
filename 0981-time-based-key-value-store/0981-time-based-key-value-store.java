@@ -2,13 +2,14 @@ class TimeMap {
     private Map<String, TreeMap<Integer, String>> timeMap;
 
     public TimeMap() {
-        timeMap = new TreeMap<>();
+        timeMap = new HashMap<>();
     }
 
     public void set(String key, String value, int timestamp) {
-        TreeMap<Integer, String> keyMap = timeMap.getOrDefault(key, new TreeMap<>());
-        keyMap.put(timestamp, value);
-        timeMap.put(key, keyMap);
+        TreeMap<Integer, String> temp = timeMap.getOrDefault(key, new TreeMap<>());
+        temp.put(timestamp, value);
+        
+        timeMap.put(key, temp);
     }
 
     public String get(String key, int timestamp) {
@@ -16,6 +17,7 @@ class TimeMap {
             return "";
 
         TreeMap<Integer, String> keyMap = timeMap.get(key);
+        // greatest key less than or equal to given key
         Integer floorTimestamp = keyMap.floorKey(timestamp);
 
         if (floorTimestamp == null)
