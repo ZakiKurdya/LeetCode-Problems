@@ -1,10 +1,10 @@
 class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {
         List<List<Integer>> result = new ArrayList<>();
-        if(target==-294967296 || target==294967296)
-        {
+        
+        if (target == -294967296 || target == 294967296)
             return result;
-        }
+        
         Arrays.sort(nums);
 
         for (int i = 0; i < nums.length - 3; i++) {
