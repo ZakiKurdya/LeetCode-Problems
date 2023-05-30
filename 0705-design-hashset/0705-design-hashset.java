@@ -12,7 +12,7 @@ class MyHashSet {
     ListNode[] table;
     
     public MyHashSet() {
-        table = new ListNode[1000000];
+        table = new ListNode[10000];
     }
     
     public void add(int key) {
@@ -45,7 +45,7 @@ class MyHashSet {
                 walker = walker.next;
                 table[index] = walker;
             } else {
-                while (walker.next != null) {
+                while (walker != null && walker.next != null) {
                     if (walker.next.value == key)
                         walker.next = walker.next.next;
                 
@@ -75,7 +75,7 @@ class MyHashSet {
     }
     
     private int getHash(int key) {
-        return key % 1000000;
+        return key % 10000;
     }
 }
 
