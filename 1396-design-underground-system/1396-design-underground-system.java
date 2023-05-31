@@ -1,40 +1,49 @@
 class UndergroundSystem {
-    private final Map<Integer, Pair<String, Integer>> customers;
-    private final Map<String, int[]> stationsDistance;
-
+    static class Pair {
+        String station; 
+        int time;
+        
+        public Pair(String station, int time) {
+            this.station = station;
+            this.time = time;
+        }
+    }
+    
+    private HashMap<Integer, Pair> check ;
+    private HashMap<String, ArrayList<Integer>> dest;
+    
     public UndergroundSystem() {
-        this.customers = new HashMap<>();
-        this.stationsDistance = new HashMap<>();
+        check = new HashMap<>();
+        dest = new HashMap<>();
     }
     
-    public void checkIn(final int id, final String stationName, final int t) {
-        this.customers.put(id, new Pair(stationName, t));
+    public void checkIn(int id, String stationName, int t) {
+        check.put(id, new Pair(stationName, t));
     }
     
-    public void checkOut(final int id, final String stationName, final int t) {
-        final Pair<String, Integer> customer = this.customers.get(id);
-
-        this.stationsDistance.putIfAbsent(customer.getKey() + "-" + stationName, new int[2]);
-
-        final int[] sum = this.stationsDistance.get(customer.getKey() + "-" + stationName);
-
-        sum[0] += t - customer.getValue();
-        sum[1]++;
-
-        this.customers.remove(id);
+    public void checkOut(int id, String stationName, int t) {
+        Pair p = check.get(id);
+        
+        String s = p.station + "->" + stationName;
+        int diff = t - p.time;
+        if (dest.containsKey(s)) {
+            ArrayList<Integer> curr = dest.get(s);
+            curr.add(diff);
+        } else {
+            ArrayList<Integer> al = new ArrayList<>();
+            al.add(diff);
+            dest.put(s, al); 
+        }
     }
     
-    public double getAverageTime(final String startStation, final String endStation) {
-        final int[] sum = this.stationsDistance.get(startStation + "-" + endStation);
-
-        return (double) sum[0] / sum[1];
+    public double getAverageTime(String startStation, String endStation) {
+        String s = startStation + "->"+endStation;
+        ArrayList<Integer> curr = dest.get(s);
+        double sum = 0;
+        for(int i = 0; i < curr.size(); i++)
+            sum += curr.get(i);
+        if(curr.size() == 0)
+            return 0;
+        return (double) sum /(double) curr.size();
     }
 }
-
-/**
- * Your UndergroundSystem object will be instantiated and called as such:
- * UndergroundSystem obj = new UndergroundSystem();
- * obj.checkIn(id,stationName,t);
- * obj.checkOut(id,stationName,t);
- * double param_3 = obj.getAverageTime(startStation,endStation);
- */
