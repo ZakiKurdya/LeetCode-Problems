@@ -13,17 +13,14 @@
  *     }
  * }
  */
+
+// DFS Solution
 class Solution {
-    private TreeMap<Integer, List<Integer>> map;
+    private List<List<Integer>> result = new ArrayList<>();
     
     public List<List<Integer>> levelOrder(TreeNode root) {
-        map = new TreeMap<>();
-        
-        preOrder(root, 0);
-        
-        List<List<Integer>> result = new ArrayList<>();
-        for (List<Integer> list : map.values())
-            result.add(list);
+        if (root != null)
+            preOrder(root, 0);
         
         return result;
     }
@@ -32,11 +29,12 @@ class Solution {
         if (node == null)
             return;
         
-        List<Integer> temp = map.getOrDefault(level, new ArrayList<>());
-        temp.add(node.val);
-        
-        map.put(level, temp);
-        
+        // create a new level
+        if (result.size() <= level)
+            result.add(new ArrayList<>());
+
+        result.get(level).add(node.val);
+		
         preOrder(node.left, level + 1);
         preOrder(node.right, level + 1);
     }
