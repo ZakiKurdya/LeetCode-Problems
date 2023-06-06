@@ -3,12 +3,11 @@ class Solution {
         Map<Integer, Integer> map = new HashMap<>();
         
         for (int i = 0; i < nums.length; i++) {
-            int temp = nums[i];
+            // (put) returns the previous value associated with the key, or null
+            Integer index = map.put(nums[i], i);
             
-            if (map.containsKey(temp) && Math.abs(map.get(temp) - i) <= k)
+            if (index != null && i - index <= k)
                 return true;
-            else
-                map.put(temp, i);
         }
         
         return false;
