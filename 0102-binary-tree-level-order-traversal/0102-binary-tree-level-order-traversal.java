@@ -14,28 +14,33 @@
  * }
  */
 
-// DFS Solution
+// BFS Solution
 class Solution {
-    private List<List<Integer>> result = new ArrayList<>();
-    
     public List<List<Integer>> levelOrder(TreeNode root) {
-        if (root != null)
-            preOrder(root, 0);
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null)
+            return result;
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = queue.poll();
+                level.add(cur.val);
+                
+                if (cur.left != null)
+                    queue.add(cur.left);
+                if (cur.right != null)
+                    queue.add(cur.right);
+            }
+            
+            result.add(level);
+        }
         
         return result;
-    }
-    
-    private void preOrder(TreeNode node, int level) {
-        if (node == null)
-            return;
-        
-        // create a new level
-        if (result.size() <= level)
-            result.add(new ArrayList<>());
-
-        result.get(level).add(node.val);
-		
-        preOrder(node.left, level + 1);
-        preOrder(node.right, level + 1);
     }
 }
