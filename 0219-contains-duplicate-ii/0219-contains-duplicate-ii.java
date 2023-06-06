@@ -3,10 +3,12 @@ class Solution {
         Map<Integer, Integer> map = new HashMap<>();
         
         for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(nums[i]) && Math.abs(map.get(nums[i]) - i) <= k)
+            int temp = nums[i];
+            
+            if (map.containsKey(temp) && Math.abs(map.get(temp) - i) <= k)
                 return true;
             else
-                map.put(nums[i], i);
+                map.put(temp, i);
         }
         
         return false;
